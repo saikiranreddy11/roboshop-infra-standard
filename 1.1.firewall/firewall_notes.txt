@@ -1,0 +1,78 @@
+project creation order:
+roboshop VPC
+1.1 firewall
+vpn
+and then come from right to left (database layer, applayer app load balancer, web layer, web load balancer)
+
+for i in 2.mongodb/ 09.redis/ 10.mysql/ 11.rabbitmq/ 05-catalogue/ 13.cart/ 12.user/ 14.shipping/ 15.payment/ 04.app_alb/ 08.web/ 06.web_alb/ ; do cd $i; terraform apply -auto-approve; cd .. ; done
+
+
+1.1.firewall/ 1.roboshop-vpc/ 0.vpn/
+
+
+First we are concentrationg on mongodb , catalogue, application layer LB, web, web ALB,vpn security groups.
+
+so we have to create 6 SG's(we have to come to database layer to web layer i.e., from right to left , that is the best approach)
+
+security-groups
+---------------
+VPN SG
+Mongodb SG
+redis
+mysql
+rabbitmq
+catalogue SG
+cart
+usershipping
+payment
+application layer load balancer SG
+web SG
+public load balancer or web layer application load balancer SG
+
+connections:
+-----------------
+
+-->VPN SG should accept the connections from Internet.
+
+Mondodb sg should accept the connections from catalogue, VPN
+
+catalogue Sg from VPN,application layer load balancer
+
+application layer load balancer SG from vpn,web 
+
+web component from vpn, public load balancer or web layer application load balancer
+
+public load balancer or web layer application load balancer  from VPN, internet
+
+redis should accept the connection from cart and user and vpn on ports 6379 and 22 respectively
+
+mysql should accept the connection from shipping,vpn on ports 3306   and 22 respectively
+
+rabbitmq should accept the connection from payments,vpn on ports 5672 and 22 respectively
+
+
+
+cart should accept the connection from app_layer_LB,vpn on ports 8080 and 22 respectively
+user should accept the connection from app_layer_LB,vpn on ports 8080 and 22 respectively
+
+shipping should accept the connection app_layer_LB,vpn on ports 8080 and 22 respectively
+
+payment should accept the connection app_layer_LB,vpn on ports 8080 and 22 respectively
+
+
+-->First we need to create the application load balancer and set the listener (to port number 80).and set the route 53 record to for 
+the application load balancer.
+
+-->after that set the catalogue component, create the autoscaling grp for catalogue component , for the autoscaling group, we need the launch template , so 
+create the launch template.and also set the autoscaling policy, mostly we use the target tracking policy. create the target group 
+dont forget to specify the target group arn in the autoscaling grp's resource block , because autoscaling have to register the created instances 
+in the catalogue target group. Finally , create the listener rule for the catalogue component.
+
+-->according to the code writtern in the load balancers and the catalogue components, when we hit the *.app.saikiransudhireddy.com from the 
+vpn, it first checks the route 53 and connects to the application load balancer, if the give dns matches the rule specified , then it 
+forwards to the catalogue target group, or else it gives the default rule as the output.
+
+-->when you click on the categories section in the roboshop home page, the request is forwarded as /app/categories/catalogue, then
+nginx intelligently removes the /app/categories part and forwards the request to the catalogue.saikiransudhireddy.com(this is the host specified in the roboshop.conf file)
+
+-->check the host header and path pattern , these is very imp to understand the concept.
