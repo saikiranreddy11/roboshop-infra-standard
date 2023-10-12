@@ -3,6 +3,10 @@ pipeline {
     agent {
         label 'AGENT_1'
     } 
+     options {
+        ansiColor('xterm') // You can specify a color mapping, such as 'xterm' or 'xterm256'
+    }
+    
     stages {
         stage('init') { 
             steps {
