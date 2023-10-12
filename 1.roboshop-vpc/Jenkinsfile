@@ -22,6 +22,8 @@ pipeline {
         stage('plan') { 
             steps {
                 sh '''
+                pwd
+                cd 1.roboshop-vpc
                 terraform plan
                 '''
             }
