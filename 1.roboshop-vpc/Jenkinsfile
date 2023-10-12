@@ -28,6 +28,15 @@ pipeline {
                 '''
             }
         }
+        stage('Manual Approval') {
+            steps {
+                input "Approve deployment to production?"
+                sh '''
+                pwd
+                cd 1.roboshop-vpc
+                '''
+    }
+}
     }
     post { 
         always { 
