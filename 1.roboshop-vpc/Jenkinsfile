@@ -31,12 +31,18 @@ pipeline {
         stage('Manual Approval') {
             steps {
                 input "Approve deployment to production?"
-                sh '''
+                
+    }
+        stage('Manual Approval') {
+            steps {
+                 sh '''
                 pwd
                 cd 1.roboshop-vpc
                 terraform apply -auto-approve
                 '''
+                
     }
+
 }
     }
     post { 
