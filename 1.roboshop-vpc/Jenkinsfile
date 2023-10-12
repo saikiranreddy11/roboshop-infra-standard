@@ -33,6 +33,7 @@ pipeline {
                 input "Approve deployment to production?"
                 
     }
+        }
         stage('Manual Approval') {
             steps {
                  sh '''
@@ -45,6 +46,7 @@ pipeline {
 
 }
     }
+    
     post { 
         always { 
             echo 'I will always say Hello again!'
