@@ -34,7 +34,7 @@ pipeline {
                 
     }
         }
-        stage('Manual Approval') {
+        stage('applying the plan') {
             steps {
                  sh '''
                 pwd
