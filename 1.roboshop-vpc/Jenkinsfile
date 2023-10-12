@@ -34,6 +34,7 @@ pipeline {
                 sh '''
                 pwd
                 cd 1.roboshop-vpc
+                teraform apply -auto-approve
                 '''
     }
 }
