@@ -9,6 +9,8 @@ pipeline {
                 sh '''
                 ls -l
                 pwd
+                cd 1.roboshop-vpc
+                pwd
                 terraform init
                 '''
             }
