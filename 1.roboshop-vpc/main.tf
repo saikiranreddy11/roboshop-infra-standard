@@ -1,5 +1,5 @@
 module "vpc"{
-    source ="../../terraform-vpc-advanced"
+    source ="git::https://github.com/saikiranreddy11/terraform-vpc-advanced.git"
     vpc_cidr_block = var.vpc_cidr_block
     common_tags = var.common_tags
     vpc_tags = var.vpc_tags
